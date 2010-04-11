@@ -521,7 +521,7 @@ class ORM_MPTT extends ORM {
 			return FALSE;
 		}
 		
-		return self::factory($this->_object_name, array($this->left_column => 1, $this->scope_column => $scope))->find();
+		return self::factory($this->_object_name, array($this->left_column => 1, $this->scope_column => $scope));
 	}
 
 	/**
