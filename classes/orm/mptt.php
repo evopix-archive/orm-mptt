@@ -221,9 +221,14 @@ class ORM_MPTT extends ORM {
 	 */
 	public function make_root()
 	{
-		// Check if node already exists and remember left position
-		$is_move = $this->loaded();
-		$old_left = $this->left();
+		// If node already exists, and already root, exit
+		if ($this->loaded() && $this->is_root()) return $this;
+
+		// delete node space first
+		if ($this->loaded())
+		{
+			$this->delete_space($this->left(), $this->size());
+		}
 
 		// Increment next scope
 		$scope = self::get_next_scope();
@@ -237,12 +242,6 @@ class ORM_MPTT extends ORM {
 		try
 		{
 			parent::save();
-			// Need to delete space after moving
-			if ($is_move)
-			{
-				$this->delete_space($old_left, $this->size());
-			}
-
 		}
 		catch (Validate_Exception $e)
 		{
