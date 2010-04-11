@@ -215,6 +215,45 @@ class ORM_MPTT extends ORM {
 	}
 
 	/**
+	 * Creates a new node as root, or moves a node to root
+	 *
+	 * @return  ORM_MPTT
+	 */
+	public function make_root()
+	{
+		// Check if node already exists and remember left position
+		$is_move = $this->loaded();
+		$old_left = $this->left();
+
+		// Increment next scope
+		$scope = self::get_next_scope();
+
+		$this->{$this->scope_column} = $scope;
+		$this->{$this->level_column} = 1;
+		$this->{$this->left_column} = 1;
+		$this->{$this->right_column} = 2;
+		$this->{$this->parent_column} = NULL;
+
+		try
+		{
+			parent::save();
+			// Need to delete space after moving
+			if ($is_move)
+			{
+				$this->delete_space($old_left, $this->size());
+			}
+
+		}
+		catch (Validate_Exception $e)
+		{
+			// Some fields didn't validate, throw an exception
+			throw $e;
+		}
+
+		return $this;
+	}
+
+	/**
 	 * Saves the current object as the root of a new scope.
 	 *
 	 * @access  public
