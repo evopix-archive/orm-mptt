@@ -494,20 +494,24 @@ class ORM_MPTT extends ORM {
 			$left_offset = ($left_column === TRUE ? $target->left() : $target->right()) + $left_offset;
 			$level_offset = $target->level() - $this->level() + $level_offset;
 			$size = $this->size();
-			$this->create_space($left_offset, $size);
+			$offset = ($left_offset - $this->left());
 			
+			$new_left = ($this->left() + $offset);
+			$new_right = ($this->right() + $offset);
+			$new_level = ($this->level() + $level_offset);
+			
+			$this->create_space($left_offset, $size);
+
 			$this->reload();
 			
-			$offset = ($left_offset - $this->left());
-
 			$this->_db->query(NULL, 'UPDATE '.$this->_table_name.'
-				SET `'.$this->left_column.'` = `'.$this->left_column.'` + '.$offset.', `'.$this->right_column.'` = `'.$this->right_column.'` + '.$offset.'
-				, `'.$this->level_column.'` = `'.$this->level_column.'` + '.$level_offset.'
-				, `'.$this->scope_column.'` = '.$target->{$this->scope_column}.'
-				WHERE `'.$this->left_column.'` >= '.$this->{$this->left_column}.'
-				AND `'.$this->right_column.'` <= '.$this->{$this->right_column}.'
-				AND `'.$this->scope_column.'` = '.$this->{$this->scope_column}, TRUE);
-			 
+				SET `'.$this->left_column.'` = '.$new_left.', `'.$this->right_column.'` = '.$new_right.'
+				, `'.$this->level_column.'` = '.$new_level.'
+				, `'.$this->scope_column.'` = '.$target->scope().'
+				WHERE `'.$this->left_column.'` >= '.$this->left().'
+				AND `'.$this->right_column.'` <= '.$this->right().'
+				AND `'.$this->scope_column.'` = '.$this->scope(), TRUE);
+			
 			$this->delete_space($this->left(), $size);
 		}
 		catch (Kohana_Exception $e)
