@@ -101,7 +101,7 @@ class ORM_MPTT extends ORM {
 	{
 		if ( ! ($target instanceof $this))
 		{
-			$target = self::factory($this->_object_name, $target);
+			$target = self::factory($this->object_name(), $target);
 		}
 		
 		return (
@@ -122,7 +122,7 @@ class ORM_MPTT extends ORM {
 	{
 		if ( ! ($target instanceof $this))
 		{
-			$target = self::factory($this->_object_name, $target);
+			$target = self::factory($this->object_name(), $target);
 		}
 
 		return ($this->parent->pk() === $target->pk());
@@ -139,7 +139,7 @@ class ORM_MPTT extends ORM {
 	{
 		if ( ! ($target instanceof $this))
 		{
-			$target = self::factory($this->_object_name, $target);
+			$target = self::factory($this->object_name(), $target);
 		}
 
 		return ($this->pk() === $target->parent->pk());
@@ -157,7 +157,7 @@ class ORM_MPTT extends ORM {
 	{
 		if ( ! ($target instanceof $this))
 		{
-			$target = self::factory($this->_object_name, $target);
+			$target = self::factory($this->object_name(), $target);
 		}
 		
 		if ($this->pk() === $target->pk())
@@ -188,7 +188,7 @@ class ORM_MPTT extends ORM {
 	{
 		if ( ! ($target instanceof $this))
 		{
-			$target = self::factory($this->_object_name, $target);
+			$target = self::factory($this->object_name(), $target);
 		}
 
 		return $target->is_descendant($this);
@@ -363,7 +363,7 @@ class ORM_MPTT extends ORM {
 		 
 		if ( ! $target instanceof $this)
 		{
-			$target = self::factory($this->_object_name, array($this->_primary_key => $target));
+			$target = self::factory($this->object_name(), array($this->primary_key() => $target));
 		 
 			if ( ! $target->loaded())
 			{
@@ -469,7 +469,7 @@ class ORM_MPTT extends ORM {
 		{
 			if ( ! $target instanceof $this)
 			{
-				$target = self::factory($this->_object_name, array($this->_primary_key => $target));
+				$target = self::factory($this->object_name(), array($this->primary_key() => $target));
 				 
 				if ( ! $target->loaded())
 				{
@@ -484,7 +484,7 @@ class ORM_MPTT extends ORM {
 
 			// Stop $this being moved into a descendant or itself or disallow if target is root
 			if ($target->is_descendant($this)
-				OR $this->{$this->_primary_key} === $target->{$this->_primary_key}
+				OR $this->{$this->primary_key()} === $target->{$this->primary_key()}
 				OR ($allow_root_target === FALSE AND $target->is_root()))
 			{
 				$this->unlock();
@@ -559,7 +559,7 @@ class ORM_MPTT extends ORM {
 			return FALSE;
 		}
 		
-		return self::factory($this->_object_name, array($this->left_column => 1, $this->scope_column => $scope));
+		return self::factory($this->object_name(), array($this->left_column => 1, $this->scope_column => $scope));
 	}
 
 	/**
@@ -570,7 +570,7 @@ class ORM_MPTT extends ORM {
 	 */
 	public function roots()
 	{
-		return self::factory($this->_object_name)
+		return self::factory($this->object_name())
 				->where($this->left_column, '=', 1)
 				->find_all();
 	}
@@ -586,7 +586,7 @@ class ORM_MPTT extends ORM {
 		if ($this->is_root())
 			return NULL;
 
-		return self::factory($this->_object_name, $this->{$this->parent_column});
+		return self::factory($this->object_name(), $this->{$this->parent_column});
 	}
 
 	/**
@@ -603,7 +603,7 @@ class ORM_MPTT extends ORM {
 	{
 		$suffix = $with_self ? '=' : '';
 
-		$query = self::factory($this->_object_name)
+		$query = self::factory($this->object_name())
 			->where($this->left_column, '<'.$suffix, $this->left())
 			->where($this->right_column, '>'.$suffix, $this->right())
 			->where($this->scope_column, '=', $this->scope())
@@ -647,7 +647,7 @@ class ORM_MPTT extends ORM {
 	 */
 	public function fulltree($scope = NULL)
 	{
-		$result = self::factory($this->_object_name);
+		$result = self::factory($this->object_name());
 
 		if ( ! is_null($scope))
 		{
@@ -672,7 +672,7 @@ class ORM_MPTT extends ORM {
 	 */
 	public function siblings($self = FALSE, $direction = 'ASC')
 	{
-		$query = self::factory($this->_object_name)
+		$query = self::factory($this->object_name())
 			->where($this->left_column, '>', $this->parent->left())
 			->where($this->right_column, '<', $this->parent->right())
 			->where($this->scope_column, '=', $this->scope())
@@ -716,7 +716,7 @@ class ORM_MPTT extends ORM {
 		$left_operator = $self ? '>=' : '>';
 		$right_operator = $self ? '<=' : '<';
 		
-		$query = self::factory($this->_object_name)
+		$query = self::factory($this->object_name())
 			->where($this->left_column, $left_operator, $this->left())
 			->where($this->right_column, $right_operator, $this->right())
 			->where($this->scope_column, '=', $this->scope())
