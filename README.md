@@ -22,9 +22,9 @@ Place module in /modules/ and include the call in your bootstrap.
 	}
 
 
-## Creating
+## Usage Examples
 
-* Creating a root node:
+### Creating a root node:
 
 	$cat = ORM::factory('Category_Mptt');
 	$cat->name = 'Music';
@@ -32,7 +32,7 @@ Place module in /modules/ and include the call in your bootstrap.
 	echo 'Category ID'.$mptt->id.' set at level '.$cat->lvl.' (scope: '.$cat->scope.')';
 	$c1 = $cat; // Saving id for next example
 
-* Creating a child node:
+### Creating a child node:
 
 	$cat->clear(); // Clearing ORM object
 	$cat->name = 'Terminology';
