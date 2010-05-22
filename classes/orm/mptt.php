@@ -376,12 +376,13 @@ class ORM_MPTT extends ORM {
 		}
 		 
 		$this->lock();
-		 
+
 		$this->{$this->left_column} = $target->{$copy_left_from} + $left_offset;
 		$this->{$this->right_column} = $this->{$this->left_column} + 1;
 		$this->{$this->level_column} = $target->{$this->level_column} + $level_offset;
 		$this->{$this->scope_column} = $target->{$this->scope_column};
-		 
+        $this->{$this->parent_column} = $target->{$target->primary_key()};
+
 		$this->create_space($this->{$this->left_column});
 		 
 		try
@@ -888,6 +889,31 @@ class ORM_MPTT extends ORM {
 	{
 		return ($this->size() - 2)/2;
 	}
+
+    /**
+     * Rebuilds the tree using the parent_id column. Order of the tree is not guaranteed
+     * to be consistent with structure prior to reconstruction.
+     *
+     * @access public
+     * @param root
+     * @param int $left
+     */
+    public static function rebuild_tree($target, $left = 1) {
+        $target->lock();
+        $right = $left + 1;
+        $children = $target->children();
+
+        foreach($children as $child) {
+            $right = self::rebuild_tree($child, $right);
+        }
+
+        $target->{$target->left_column} = $left;
+        $target->{$target->right_column} = $right;
+        $target->save();
+        $target->unlock();
+
+        return $right + 1;
+    }
 
 	/**
 	 * Magic get function, maps field names to class functions.
