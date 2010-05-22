@@ -360,7 +360,6 @@ class ORM_MPTT extends ORM {
 			return FALSE;
 		 
 		 
-		 
 		if ( ! $target instanceof $this)
 		{
 			$target = self::factory($this->object_name(), array($this->primary_key() => $target));
@@ -895,10 +894,26 @@ class ORM_MPTT extends ORM {
      * to be consistent with structure prior to reconstruction.
      *
      * @access public
-     * @param root
-     * @param int $left
+     * @param int       left    Starting value for left branch
+     * @param ORM_MPTT  target  Target node to use as root
+     * @return 
      */
-    public static function rebuild_tree($target, $left = 1) {
+    public function rebuild_tree($left = 1, $target = NULL) {
+        if (is_null($target) && $this->empty_pk()) {
+            return FALSE;
+        } elseif (is_null($target)) {
+            $target = $this;
+        }
+        if (!$target->loaded()) {
+            $target->_load();
+        }
+
+        if (is_null($left)) {
+            $left = $target->{$target->left_column};
+        }
+
+
+
         $target->lock();
         $right = $left + 1;
         $children = $target->children();
@@ -909,7 +924,7 @@ class ORM_MPTT extends ORM {
 
         $target->{$target->left_column} = $left;
         $target->{$target->right_column} = $right;
-        $target->save();
+        $target->save();        
         $target->unlock();
 
         return $right + 1;
