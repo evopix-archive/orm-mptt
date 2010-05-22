@@ -891,14 +891,17 @@ class ORM_MPTT extends ORM {
 
     /**
      * Rebuilds the tree using the parent_id column. Order of the tree is not guaranteed
-     * to be consistent with structure prior to reconstruction.
+     * to be consistent with structure prior to reconstruction. This method will reduce the
+     * tree structure to eliminating any holes. If you have a child node that is outside of
+     * the left/right constraints it will not be moved under the root.
      *
      * @access public
      * @param int       left    Starting value for left branch
      * @param ORM_MPTT  target  Target node to use as root
      * @return 
      */
-    public function rebuild_tree($left = 1, $target = NULL) {
+    public function rebuild_tree($left = 1, $target = NULL) {        
+        // check if using target or self as root and load if not loaded
         if (is_null($target) && $this->empty_pk()) {
             return FALSE;
         } elseif (is_null($target)) {
@@ -908,18 +911,17 @@ class ORM_MPTT extends ORM {
             $target->_load();
         }
 
+        // Use the current node left value for entire tree
         if (is_null($left)) {
             $left = $target->{$target->left_column};
         }
-
-
 
         $target->lock();
         $right = $left + 1;
         $children = $target->children();
 
-        foreach($children as $child) {
-            $right = self::rebuild_tree($child, $right);
+        foreach($children as $child) {          
+            $right = $child->rebuild_tree($right);
         }
 
         $target->{$target->left_column} = $left;
