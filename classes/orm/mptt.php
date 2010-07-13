@@ -293,6 +293,32 @@ class ORM_MPTT extends ORM {
 		
 		return $this;
 	}
+
+	/**
+	 * Sets the parent_id to the given target column. Returns the target ORM_MPTT object.
+	 * 
+	 * @access  private
+	 * @param   ORM_MPTT|integer  primary key value or ORM_MPTT object of target node
+	 * @return  ORM_MPTT
+	 */
+  private function parent_from($target, $col = 'id')
+  {
+		if ( ! $target instanceof $this)
+		{
+			$target = self::factory($this->object_name(), array($this->primary_key() => $target));
+    }
+
+    if($target->loaded())
+    {
+      $this->parent_id = $target->{$col};
+    }
+    else
+    {
+      $this->parent_id = NULL;
+    }
+
+    return $target;
+  }
 	
 	/**
 	 * Inserts a new node as the first child of the target node.
@@ -303,6 +329,7 @@ class ORM_MPTT extends ORM {
 	 */
 	public function insert_as_first_child($target)
 	{
+    $target = $this->parent_from($target, 'id');
 		return $this->insert($target, $this->left_column, 1, 1);
 	}
 	
@@ -315,6 +342,7 @@ class ORM_MPTT extends ORM {
 	 */
 	public function insert_as_last_child($target)
 	{
+    $target = $this->parent_from($target, 'id');
 		return $this->insert($target, $this->right_column, 0, 1);
 	}
 	
@@ -327,6 +355,7 @@ class ORM_MPTT extends ORM {
 	 */
 	public function insert_as_prev_sibling($target)
 	{
+    $target = $this->parent_from($target, 'parent_id');
 		return $this->insert($target, $this->left_column, 0, 0);
 	}
 	
@@ -339,6 +368,7 @@ class ORM_MPTT extends ORM {
 	 */
 	public function insert_as_next_sibling($target)
 	{
+    $target = $this->parent_from($target, 'parent_id');
 		return $this->insert($target, $this->right_column, 1, 0);
 	}
 	
@@ -437,21 +467,25 @@ class ORM_MPTT extends ORM {
 	
 	public function move_to_first_child($target)
 	{
+    $target = $this->parent_from($target, 'id');
 		return $this->move($target, TRUE, 1, 1, TRUE);
 	}
 	
 	public function move_to_last_child($target)
 	{
+    $target = $this->parent_from($target, 'id');
 		return $this->move($target, FALSE, 0, 1, TRUE);
 	}
 	
 	public function move_to_prev_sibling($target)
 	{
+    $target = $this->parent_from($target, 'parent_id');
 		return $this->move($target, TRUE, 0, 0, FALSE);
 	}
 	
 	public function move_to_next_sibling($target)
 	{
+    $target = $this->parent_from($target, 'parent_id');
 		return $this->move($target, FALSE, 1, 0, FALSE);
 	}
 	
@@ -459,7 +493,10 @@ class ORM_MPTT extends ORM {
 	{
 		if ( ! $this->loaded())
 			return FALSE;
-		
+	  
+    // store the changed parent id before reload
+    $parent_id = $this->parent_id;
+
 		// Make sure we have the most upto date version of this AFTER we lock
 		$this->lock();
 		$this->reload();
@@ -520,6 +557,13 @@ class ORM_MPTT extends ORM {
 			$this->unlock();
 			throw $e;
 		}
+
+    // all went well so save the parent_id if changed
+    if($parent_id != $this->parent_id)
+    {
+      $this->parent_id = $parent_id;
+      $this->save();
+    }
 		 
 		$this->unlock();
 		 
