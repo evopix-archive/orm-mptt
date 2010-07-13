@@ -831,7 +831,7 @@ class ORM_MPTT extends ORM {
 	 */
  	public function left()
 	{
-		return $this->{$this->left_column};
+		return (INT) $this->{$this->left_column};
 	}
 
 	/**
@@ -842,7 +842,7 @@ class ORM_MPTT extends ORM {
 	 */
 	public function right()
 	{
-		return $this->{$this->right_column};
+		return (INT) $this->{$this->right_column};
 	}
 
 	/**
@@ -853,7 +853,7 @@ class ORM_MPTT extends ORM {
 	 */
 	public function level()
 	{
-		return $this->{$this->level_column};
+		return (INT) $this->{$this->level_column};
 	}
 
 	/**
@@ -864,7 +864,7 @@ class ORM_MPTT extends ORM {
 	 */
 	public function scope()
 	{
-		return $this->{$this->scope_column};
+		return (INT) $this->{$this->scope_column};
 	}
 
 	/**
