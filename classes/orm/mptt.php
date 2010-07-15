@@ -87,7 +87,7 @@ class ORM_MPTT extends ORM {
 	 * Is the current node a descendant of the supplied node.
 	 *
 	 * @access  public
-	 * @param   ORM_MPTT|integer  ORM_MPTT object or primary key value of target node
+	 * @param   ORM_MPTT|int  ORM_MPTT object or primary key value of target node
 	 * @return  bool
 	 */
 	public function is_descendant($target)
@@ -108,7 +108,7 @@ class ORM_MPTT extends ORM {
 	 * Checks if the current node is a direct child of the supplied node.
 	 * 
 	 * @access  public
-	 * @param   ORM_MPTT|integer  ORM_MPTT object or primary key value of target node
+	 * @param   ORM_MPTT|int  ORM_MPTT object or primary key value of target node
 	 * @return  bool
 	 */
 	public function is_child($target)
@@ -125,7 +125,7 @@ class ORM_MPTT extends ORM {
 	 * Checks if the current node is a direct parent of a specific node.
 	 * 
 	 * @access  public
-	 * @param   ORM_MPTT|integer  ORM_MPTT object or primary key value of child node
+	 * @param   ORM_MPTT|int  ORM_MPTT object or primary key value of child node
 	 * @return  bool
 	 */
 	public function is_parent($target)
@@ -143,7 +143,7 @@ class ORM_MPTT extends ORM {
 	 * (Both have the same direct parent)
 	 * 
 	 * @access  public
-	 * @param   ORM_MPTT|integer  ORM_MPTT object or primary key value of target node
+	 * @param   ORM_MPTT|int  ORM_MPTT object or primary key value of target node
 	 * @return  bool
 	 */
 	public function is_sibling($target)
@@ -174,7 +174,7 @@ class ORM_MPTT extends ORM {
 	 * Checks if the current node is one of the parents of a specific node.
 	 * 
 	 * @access  public
-	 * @param   integer|object  id or object of parent node
+	 * @param   int|object  id or object of parent node
 	 * @return  bool
 	 */
 	public function is_in_parents($target)
@@ -249,7 +249,7 @@ class ORM_MPTT extends ORM {
 	 * Saves the current object as the root of a new scope.
 	 *
 	 * @access  public
-	 * @param   integer   the new scope
+	 * @param   int       the new scope
 	 * @return  ORM_MPTT
 	 * @throws  Validation_Exception
 	 */
@@ -291,38 +291,38 @@ class ORM_MPTT extends ORM {
 	 * Sets the parent_id to the given target column. Returns the target ORM_MPTT object.
 	 * 
 	 * @access  private
-	 * @param   ORM_MPTT|integer  primary key value or ORM_MPTT object of target node
+	 * @param   ORM_MPTT|int  primary key value or ORM_MPTT object of target node
 	 * @return  ORM_MPTT
 	 */
-  private function parent_from($target, $col = 'id')
-  {
+	protected function parent_from($target, $col = 'id')
+	{
 		if ( ! $target instanceof $this)
 		{
 			$target = self::factory($this->object_name(), array($this->primary_key() => $target));
-    }
+		}
 
-    if($target->loaded())
-    {
-      $this->parent_id = $target->{$col};
-    }
-    else
-    {
-      $this->parent_id = NULL;
-    }
+		if ($target->loaded())
+		{
+			$this->parent_id = $target->{$col};
+		}
+		else
+		{
+			$this->parent_id = NULL;
+		}
 
-    return $target;
-  }
-	
+		return $target;
+	}
+
 	/**
 	 * Inserts a new node as the first child of the target node.
 	 * 
 	 * @access  public
-	 * @param   ORM_MPTT|integer  primary key value or ORM_MPTT object of target node
+	 * @param   ORM_MPTT|int  primary key value or ORM_MPTT object of target node
 	 * @return  ORM_MPTT
 	 */
 	public function insert_as_first_child($target)
 	{
-    $target = $this->parent_from($target, 'id');
+		$target = $this->parent_from($target, 'id');
 		return $this->insert($target, $this->left_column, 1, 1);
 	}
 	
@@ -330,12 +330,12 @@ class ORM_MPTT extends ORM {
 	 * Inserts a new node as the last child of the target node.
 	 * 
 	 * @access  public
-	 * @param   ORM_MPTT|integer  primary key value or ORM_MPTT object of target node
+	 * @param   ORM_MPTT|int  primary key value or ORM_MPTT object of target node
 	 * @return  ORM_MPTT
 	 */
 	public function insert_as_last_child($target)
 	{
-    $target = $this->parent_from($target, 'id');
+		$target = $this->parent_from($target, 'id');
 		return $this->insert($target, $this->right_column, 0, 1);
 	}
 	
@@ -343,12 +343,12 @@ class ORM_MPTT extends ORM {
 	 * Inserts a new node as a previous sibling of the target node.
 	 * 
 	 * @access  public
-	 * @param   ORM_MPTT|integer  primary key value or ORM_MPTT object of target node
+	 * @param   ORM_MPTT|int  primary key value or ORM_MPTT object of target node
 	 * @return  ORM_MPTT
 	 */
 	public function insert_as_prev_sibling($target)
 	{
-    $target = $this->parent_from($target, 'parent_id');
+		$target = $this->parent_from($target, 'parent_id');
 		return $this->insert($target, $this->left_column, 0, 0);
 	}
 	
@@ -356,12 +356,12 @@ class ORM_MPTT extends ORM {
 	 * Inserts a new node as the next sibling of the target node.
 	 * 
 	 * @access  public
-	 * @param   ORM_MPTT|integer  primary key value or ORM_MPTT object of target node
+	 * @param   ORM_MPTT|int  primary key value or ORM_MPTT object of target node
 	 * @return  ORM_MPTT
 	 */
 	public function insert_as_next_sibling($target)
 	{
-    $target = $this->parent_from($target, 'parent_id');
+		$target = $this->parent_from($target, 'parent_id');
 		return $this->insert($target, $this->right_column, 1, 0);
 	}
 	
@@ -369,10 +369,10 @@ class ORM_MPTT extends ORM {
 	 * Insert the object
 	 *
 	 * @access  protected
-	 * @param   ORM_MPTT|integer  primary key value or ORM_MPTT object of target node.
-	 * @param   string  target object property to take new left value from
-	 * @param   integer  offset for left value
-	 * @param   integer  offset for level value
+	 * @param   ORM_MPTT|int  primary key value or ORM_MPTT object of target node.
+	 * @param   string        target object property to take new left value from
+	 * @param   int           offset for left value
+	 * @param   int           offset for level value
 	 * @return  ORM_MPTT
 	 * @throws  Validation_Exception
 	 */
@@ -403,7 +403,7 @@ class ORM_MPTT extends ORM {
 		$this->{$this->right_column} = $this->{$this->left_column} + 1;
 		$this->{$this->level_column} = $target->{$this->level_column} + $level_offset;
 		$this->{$this->scope_column} = $target->{$this->scope_column};
-        $this->{$this->parent_column} = $target->{$target->primary_key()};
+		$this->{$this->parent_column} = $target->{$target->primary_key()};
 
 		$this->create_space($this->{$this->left_column});
 		 
@@ -460,25 +460,25 @@ class ORM_MPTT extends ORM {
 	
 	public function move_to_first_child($target)
 	{
-    $target = $this->parent_from($target, 'id');
+		$target = $this->parent_from($target, 'id');
 		return $this->move($target, TRUE, 1, 1, TRUE);
 	}
 	
 	public function move_to_last_child($target)
 	{
-    $target = $this->parent_from($target, 'id');
+		$target = $this->parent_from($target, 'id');
 		return $this->move($target, FALSE, 0, 1, TRUE);
 	}
 	
 	public function move_to_prev_sibling($target)
 	{
-    $target = $this->parent_from($target, 'parent_id');
+		$target = $this->parent_from($target, 'parent_id');
 		return $this->move($target, TRUE, 0, 0, FALSE);
 	}
 	
 	public function move_to_next_sibling($target)
 	{
-    $target = $this->parent_from($target, 'parent_id');
+		$target = $this->parent_from($target, 'parent_id');
 		return $this->move($target, FALSE, 1, 0, FALSE);
 	}
 	
@@ -487,8 +487,8 @@ class ORM_MPTT extends ORM {
 		if ( ! $this->loaded())
 			return FALSE;
 	  
-    // store the changed parent id before reload
-    $parent_id = $this->parent_id;
+		// store the changed parent id before reload
+		$parent_id = $this->parent_id;
 
 		// Make sure we have the most upto date version of this AFTER we lock
 		$this->lock();
@@ -531,15 +531,15 @@ class ORM_MPTT extends ORM {
 
 			$offset = ($left_offset - $this->left());
 			
-			$this->_db->query(NULL, 'UPDATE '.$this->_table_name.'
-				SET `'.$this->left_column.'` = `'.$this->left_column.'` + '.$offset.'
-        , `'.$this->right_column.'` =  `'.$this->right_column.'` + '.$offset.'
-				, `'.$this->level_column.'` =  `'.$this->level_column.'` + '.$level_offset.'
-				, `'.$this->scope_column.'` = '.$target->scope().'
-				WHERE `'.$this->left_column.'` >= '.$this->left().'
-				AND `'.$this->right_column.'` <= '.$this->right().'
-				AND `'.$this->scope_column.'` = '.$this->scope(), TRUE);
-			
+			$this->_db->query(NULL, 'UPDATE '.$this->_table_name.' SET `'
+				. $this->left_column.'` = `'.$this->left_column.'` + '
+				. $offset.', `'.$this->right_column.'` =  `'.$this->right_column.'` + '
+				. $offset.', `'.$this->level_column.'` =  `'.$this->level_column.'` + '
+				. $level_offset.', `'.$this->scope_column.'` = '.$target->scope()
+				. ' WHERE `'.$this->left_column.'` >= '.$this->left().' AND `'
+				. $this->right_column.'` <= '.$this->right().' AND `'
+				. $this->scope_column.'` = '.$this->scope(), TRUE);
+
 			$this->delete_space($this->left(), $size);
 		}
 		catch (Kohana_Exception $e)
@@ -549,15 +549,14 @@ class ORM_MPTT extends ORM {
 			throw $e;
 		}
 
-    // all went well so save the parent_id if changed
-    if($parent_id != $this->parent_id)
-    {
-      $this->parent_id = $parent_id;
-      $this->save();
-    }
-		 
+		// all went well so save the parent_id if changed
+		if ($parent_id != $this->parent_id)
+		{
+			$this->parent_id = $parent_id;
+			$this->save();
+		}
+
 		$this->unlock();
-		 
 		return $this;
 	}
 
@@ -565,7 +564,7 @@ class ORM_MPTT extends ORM {
 	 * Returns the next available value for scope.
 	 *
 	 * @access  protected
-	 * @return  integer
+	 * @return  int
 	 **/
 	protected function get_next_scope()
 	{
@@ -584,7 +583,7 @@ class ORM_MPTT extends ORM {
 	 * Returns current or all root node/s
 	 * 
 	 * @access  public
-	 * @param   integer         scope
+	 * @param   int             scope
 	 * @return  ORM_MPTT|FALSE
 	 */
 	public function root($scope = NULL)
@@ -669,7 +668,7 @@ class ORM_MPTT extends ORM {
 	 * @access  public
 	 * @param   bool     include the current node
 	 * @param   string   direction to order the left column by
-	 * @param   integer  number of children to get
+	 * @param   int      number of children to get
 	 * @return  ORM_MPTT
 	 */
 	public function children($self = FALSE, $direction = 'ASC', $limit = FALSE)
@@ -743,11 +742,11 @@ class ORM_MPTT extends ORM {
 	 * Returns the descendants of the current node.
 	 *
 	 * @access  public
-	 * @param   bool  include the current node
-	 * @param   string  direction to order the left column by.
-	 * @param   bool  include direct children only
-	 * @param   bool  include leaves only
-	 * @param   integer  number of results to get
+	 * @param   bool      include the current node
+	 * @param   string    direction to order the left column by.
+	 * @param   bool      include direct children only
+	 * @param   bool      include leaves only
+	 * @param   int       number of results to get
 	 * @return  ORM_MPTT
 	 */
 	public function descendants($self = FALSE, $direction = 'ASC', $direct_children_only = FALSE, $leaves_only = FALSE, $limit = FALSE)
@@ -794,8 +793,8 @@ class ORM_MPTT extends ORM {
 	 * Adds space to the tree for adding or inserting nodes.
 	 * 
 	 * @access  protected
-	 * @param   integer    start position
-	 * @param   integer    size of the gap to add [optional]
+	 * @param   int    start position
+	 * @param   int    size of the gap to add [optional]
 	 * @return  void
 	 */
 	protected function create_space($start, $size = 2)
@@ -817,8 +816,8 @@ class ORM_MPTT extends ORM {
 	 * Removes space from the tree after deleting or moving nodes.
 	 * 
 	 * @access  protected
-	 * @param   integer    start position
-	 * @param   integer    size of the gap to remove [optional]
+	 * @param   int    start position
+	 * @param   int    size of the gap to remove [optional]
 	 * @return  void
 	 */
 	protected function delete_space($start, $size = 2)
@@ -862,7 +861,7 @@ class ORM_MPTT extends ORM {
 	 * Returns the value of the current nodes left column.
 	 * 
 	 * @access  public
-	 * @return  integer
+	 * @return  int
 	 */
  	public function left()
 	{
@@ -873,7 +872,7 @@ class ORM_MPTT extends ORM {
 	 * Returns the value of the current nodes right column.
 	 * 
 	 * @access  public
-	 * @return  integer
+	 * @return  int
 	 */
 	public function right()
 	{
@@ -884,7 +883,7 @@ class ORM_MPTT extends ORM {
 	 * Returns the value of the current nodes level column.
 	 * 
 	 * @access  public
-	 * @return  integer
+	 * @return  int
 	 */
 	public function level()
 	{
@@ -895,7 +894,7 @@ class ORM_MPTT extends ORM {
 	 * Returns the value of the current nodes scope column.
 	 * 
 	 * @access  public
-	 * @return  integer
+	 * @return  int
 	 */
 	public function scope()
 	{
@@ -906,7 +905,7 @@ class ORM_MPTT extends ORM {
 	 * Returns the size of the current node.
 	 * 
 	 * @access  public
-	 * @return  integer
+	 * @return  int
 	 */
 	public function size()
 	{
@@ -917,55 +916,63 @@ class ORM_MPTT extends ORM {
 	 * Returns the number of descendants the current node has.
 	 * 
 	 * @access  public
-	 * @return  integer
+	 * @return  int
 	 */
 	public function count()
 	{
-		return ($this->size() - 2)/2;
+		return ($this->size() - 2) / 2;
 	}
 
-    /**
-     * Rebuilds the tree using the parent_id column. Order of the tree is not guaranteed
-     * to be consistent with structure prior to reconstruction. This method will reduce the
-     * tree structure to eliminating any holes. If you have a child node that is outside of
-     * the left/right constraints it will not be moved under the root.
-     *
-     * @access public
-     * @param int       left    Starting value for left branch
-     * @param ORM_MPTT  target  Target node to use as root
-     * @return 
-     */
-    public function rebuild_tree($left = 1, $target = NULL) {        
-        // check if using target or self as root and load if not loaded
-        if (is_null($target) && $this->empty_pk()) {
-            return FALSE;
-        } elseif (is_null($target)) {
-            $target = $this;
-        }
-        if (!$target->loaded()) {
-            $target->_load();
-        }
+	/**
+	 * Rebuilds the tree using the parent_id column. Order of the tree is not guaranteed
+	 * to be consistent with structure prior to reconstruction. This method will reduce the
+	 * tree structure to eliminating any holes. If you have a child node that is outside of
+	 * the left/right constraints it will not be moved under the root.
+	 *
+	 * @access  public
+	 * @param   int       left    Starting value for left branch
+	 * @param   ORM_MPTT  target  Target node to use as root
+	 * @return  int
+	 */
+	public function rebuild_tree($left = 1, $target = NULL)
+	{
+		// check if using target or self as root and load if not loaded
+		if (is_null($target) AND $this->empty_pk())
+		{
+			return FALSE;
+		}
+		elseif (is_null($target))
+		{
+			$target = $this;
+		}
 
-        // Use the current node left value for entire tree
-        if (is_null($left)) {
-            $left = $target->{$target->left_column};
-        }
+		if ( ! $target->loaded())
+		{
+			$target->_load();
+		}
 
-        $target->lock();
-        $right = $left + 1;
-        $children = $target->children();
+		// Use the current node left value for entire tree
+		if (is_null($left))
+		{
+			$left = $target->{$target->left_column};
+		}
 
-        foreach($children as $child) {          
-            $right = $child->rebuild_tree($right);
-        }
+		$target->lock();
+		$right = $left + 1;
+		$children = $target->children();
 
-        $target->{$target->left_column} = $left;
-        $target->{$target->right_column} = $right;
-        $target->save();        
-        $target->unlock();
+		foreach ($children as $child)
+		{
+			$right = $child->rebuild_tree($right);
+		}
 
-        return $right + 1;
-    }
+		$target->{$target->left_column} = $left;
+		$target->{$target->right_column} = $right;
+		$target->save();
+		$target->unlock();
+
+		return $right + 1;
+	}
 
 	/**
 	 * Magic get function, maps field names to class functions.
@@ -1005,4 +1012,4 @@ class ORM_MPTT extends ORM {
 		}
 	}
 
-}
+} // End ORM MPTT
