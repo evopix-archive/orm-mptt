@@ -18,31 +18,31 @@ class ORM_MPTT extends ORM {
 	 * @access  public
 	 * @var     string  left column name
 	 */
-	public $left_column = NULL;
+	public $left_column = 'lft';
 
 	/**
 	 * @access  public
 	 * @var     string  right column name
 	 */
-	public $right_column = NULL;
+	public $right_column = 'rgt';
 
 	/**
 	 * @access  public
 	 * @var     string  level column name
 	 */
-	public $level_column = NULL;
+	public $level_column = 'lvl';
 
 	/**
 	 * @access  public
 	 * @var     string  scope column name
 	 */
-	public $scope_column = NULL;
+	public $scope_column = 'scope';
 
 	/**
 	 * @access  public
 	 * @var     string  parent column name
 	 */
-	public $parent_column = NULL;
+	public $parent_column = 'parent_id';
 
 	/**
 	 * Load the default column names.
@@ -53,13 +53,6 @@ class ORM_MPTT extends ORM {
 	 */
 	public function __construct($id = NULL)
 	{
-		$config = Kohana::config('mptt');
-		
-		foreach ($config as $param => $value)
-		{
-			$this->{$param} = $value;
-		}
-		
 		if ( ! isset($this->_sorting))
 		{
 			$this->_sorting = array($this->left_column => 'ASC');
