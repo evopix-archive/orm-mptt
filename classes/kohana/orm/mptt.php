@@ -295,20 +295,25 @@ class Kohana_ORM_MPTT extends ORM {
 	 * @param   string        name of the targets nodes column to use
 	 * @return  ORM_MPTT
 	 */
-	protected function parent_from($target, $col = 'id')
+	protected function parent_from($target, $column = NULL)
 	{
 		if ( ! $target instanceof $this)
 		{
 			$target = self::factory($this->object_name(), array($this->primary_key() => $target));
 		}
 
+		if ($column === NULL)
+		{
+			$column = $target->primary_key();
+		}
+
 		if ($target->loaded())
 		{
-			$this->parent_id = $target->{$col};
+			$this->{parent_column} = $target->{$column};
 		}
 		else
 		{
-			$this->parent_id = NULL;
+			$this->{parent_column} = NULL;
 		}
 
 		return $target;
@@ -349,7 +354,7 @@ class Kohana_ORM_MPTT extends ORM {
 	 */
 	public function insert_as_prev_sibling($target)
 	{
-		$target = $this->parent_from($target, 'parent_id');
+		$target = $this->parent_from($target, $this->parent_column);
 		return $this->insert($target, $this->left_column, 0, 0);
 	}
 	
@@ -362,7 +367,7 @@ class Kohana_ORM_MPTT extends ORM {
 	 */
 	public function insert_as_next_sibling($target)
 	{
-		$target = $this->parent_from($target, 'parent_id');
+		$target = $this->parent_from($target, $this->parent_column);
 		return $this->insert($target, $this->right_column, 1, 0);
 	}
 	
@@ -473,13 +478,13 @@ class Kohana_ORM_MPTT extends ORM {
 	
 	public function move_to_prev_sibling($target)
 	{
-		$target = $this->parent_from($target, 'parent_id');
+		$target = $this->parent_from($target, $this->parent_column);
 		return $this->move($target, TRUE, 0, 0, FALSE);
 	}
 	
 	public function move_to_next_sibling($target)
 	{
-		$target = $this->parent_from($target, 'parent_id');
+		$target = $this->parent_from($target, $this->parent_column);
 		return $this->move($target, FALSE, 1, 0, FALSE);
 	}
 	
@@ -489,7 +494,7 @@ class Kohana_ORM_MPTT extends ORM {
 			return FALSE;
 	  
 		// store the changed parent id before reload
-		$parent_id = $this->parent_id;
+		$parent_id = $this->{parent_column};
 
 		// Make sure we have the most upto date version of this AFTER we lock
 		$this->lock();
@@ -551,9 +556,9 @@ class Kohana_ORM_MPTT extends ORM {
 		}
 
 		// all went well so save the parent_id if changed
-		if ($parent_id != $this->parent_id)
+		if ($parent_id != $this->{parent_column})
 		{
-			$this->parent_id = $parent_id;
+			$this->{parent_column} = $parent_id;
 			$this->save();
 		}
 
@@ -939,7 +944,7 @@ class Kohana_ORM_MPTT extends ORM {
 	}
 
 	/**
-	 * Rebuilds the tree using the parent_id column. Order of the tree is not guaranteed
+	 * Rebuilds the tree using the parent_column. Order of the tree is not guaranteed
 	 * to be consistent with structure prior to reconstruction. This method will reduce the
 	 * tree structure to eliminating any holes. If you have a child node that is outside of
 	 * the left/right constraints it will not be moved under the root.
