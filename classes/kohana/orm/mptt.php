@@ -450,7 +450,7 @@ class Kohana_ORM_MPTT extends ORM {
 			DB::delete($this->_table_name)
 				->where($this->left_column,' >=',$this->left())
 				->where($this->right_column,' <= ',$this->right())
-				->where($this->scope_column,' <= ',$this->scope())
+				->where($this->scope_column,' = ',$this->scope())
 				->execute($this->_db);
 
 			$this->delete_space($this->left(), $this->size());
