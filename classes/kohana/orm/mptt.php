@@ -288,10 +288,11 @@ class Kohana_ORM_MPTT extends ORM {
 	}
 
 	/**
-	 * Sets the parent_id to the given target column. Returns the target ORM_MPTT object.
+	 * Sets the parent_column value to the given targets column value. Returns the target ORM_MPTT object.
 	 * 
-	 * @access  private
+	 * @access  protected
 	 * @param   ORM_MPTT|int  primary key value or ORM_MPTT object of target node
+	 * @param   string        name of the targets nodes column to use
 	 * @return  ORM_MPTT
 	 */
 	protected function parent_from($target, $col = 'id')
