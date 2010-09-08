@@ -263,7 +263,7 @@ class Kohana_ORM_MPTT extends ORM {
 		{
 			$scope = self::get_next_scope();
 		}
-		elseif ( ! self::scope_available($scope))
+		elseif ( ! $this->scope_available($scope))
 		{
 			return FALSE;
 		}
@@ -921,6 +921,20 @@ class Kohana_ORM_MPTT extends ORM {
 	public function count()
 	{
 		return ($this->size() - 2) / 2;
+	}
+
+	/**
+	 * Checks if the supplied scope is available.
+	 * 
+	 * @access  protected
+	 * @param   int        scope to check availability of
+	 * @return  bool
+	 */
+	protected function scope_available($scope)
+	{
+		return (bool) ! self::factory($this->_object_name)
+			->where($this->scope_column, '=', $scope)
+			->count_all();
 	}
 
 	/**
