@@ -309,11 +309,11 @@ class Kohana_ORM_MPTT extends ORM {
 
 		if ($target->loaded())
 		{
-			$this->{parent_column} = $target->{$column};
+			$this->{$this->parent_column} = $target->{$column};
 		}
 		else
 		{
-			$this->{parent_column} = NULL;
+			$this->{$this->parent_column} = NULL;
 		}
 
 		return $target;
@@ -494,7 +494,7 @@ class Kohana_ORM_MPTT extends ORM {
 			return FALSE;
 	  
 		// store the changed parent id before reload
-		$parent_id = $this->{parent_column};
+		$parent_id = $this->{$this->parent_column};
 
 		// Make sure we have the most upto date version of this AFTER we lock
 		$this->lock();
@@ -556,9 +556,9 @@ class Kohana_ORM_MPTT extends ORM {
 		}
 
 		// all went well so save the parent_id if changed
-		if ($parent_id != $this->{parent_column})
+		if ($parent_id != $this->{$this->parent_column})
 		{
-			$this->{parent_column} = $parent_id;
+			$this->{$this->parent_column} = $parent_id;
 			$this->save();
 		}
 
