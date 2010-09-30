@@ -378,7 +378,6 @@ class Kohana_ORM_MPTT extends ORM {
 		$this->{$this->right_column} = $this->{$this->left_column} + 1;
 		$this->{$this->level_column} = $target->{$this->level_column} + $level_offset;
 		$this->{$this->scope_column} = $target->{$this->scope_column};
-		$this->{$this->parent_column} = $target->{$target->primary_key()};
 
 		$this->create_space($this->{$this->left_column});
 		 
