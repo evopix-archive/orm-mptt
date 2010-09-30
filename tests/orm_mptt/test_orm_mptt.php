@@ -30,6 +30,7 @@ class ORM_MPTT_Test extends PHPUnit_Extensions_Database_TestCase {
 	{
 		$db_connection = Kohana::config('unittest.db_connection');
 		$db_config = Kohana::config('database.'.$db_connection);
+		Database::$default = $db_connection;
 		
 		if ($db_config['type'] == 'mysql')
 		{
