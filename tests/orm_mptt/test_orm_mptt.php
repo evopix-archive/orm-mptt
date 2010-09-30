@@ -347,6 +347,22 @@ class ORM_MPTT_Test extends PHPUnit_Extensions_Database_TestCase {
 	}
 
 	/**
+	 * Tests deleting a node.
+	 *
+	 * @test
+	 * @covers ORM_MPTT::delete
+	 */
+	public function test_delete()
+	{
+		$node_4 = ORM::factory('test_orm_mptt', 4);
+		$node_4->delete();
+		
+		// Make sure the space was adjusted correctly
+		$this->assertEquals(6, ORM::factory('test_orm_mptt', 1)->rgt);
+		$this->assertEquals(5, ORM::factory('test_orm_mptt', 3)->rgt);
+	}
+
+	/**
 	 * Tests fetching child nodes
 	 *
 	 * @test
