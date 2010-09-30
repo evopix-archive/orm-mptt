@@ -297,7 +297,7 @@ class Kohana_ORM_MPTT extends ORM {
 	 */
 	public function insert_as_first_child($target)
 	{
-		$target = $this->parent_from($target, 'id');
+		$target = $this->parent_from($target);
 		return $this->insert($target, $this->left_column, 1, 1);
 	}
 	
