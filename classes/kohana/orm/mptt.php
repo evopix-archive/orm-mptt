@@ -118,7 +118,7 @@ class Kohana_ORM_MPTT extends ORM {
 			$target = self::factory($this->object_name(), $target);
 		}
 
-		return ($this->{$this->parent_column} === $target->pk());
+		return ((int) $this->{$this->parent_column} === (int) $target->pk());
 	}
 
 	/**
@@ -135,7 +135,7 @@ class Kohana_ORM_MPTT extends ORM {
 			$target = self::factory($this->object_name(), $target);
 		}
 
-		return ($this->pk() === $target->{$this->parent_column});
+		return ((int) $this->pk() === (int) $target->{$this->parent_column});
 	}
 
 	/**
@@ -153,10 +153,10 @@ class Kohana_ORM_MPTT extends ORM {
 			$target = self::factory($this->object_name(), $target);
 		}
 		
-		if ($this->pk() === $target->pk())
+		if ((int) $this->pk() === (int) $target->pk())
 			return FALSE;
 
-		return ($this->{$this->parent_column} === $target->{$target->parent_column});
+		return ((int) $this->{$this->parent_column} === (int) $target->{$target->parent_column});
 	}
 
 	/**
@@ -210,12 +210,16 @@ class Kohana_ORM_MPTT extends ORM {
 	/**
 	 * Creates a new node as root, or moves a node to root
 	 *
+	 * @access  public
+	 * @param   int       the new scope
 	 * @return  ORM_MPTT
+	 * @throws  Validation_Exception
 	 */
-	public function make_root()
+	public function make_root($scope = NULL)
 	{
 		// If node already exists, and already root, exit
-		if ($this->loaded() && $this->is_root()) return $this;
+		if ($this->loaded() AND $this->is_root())
+			return $this;
 
 		// delete node space first
 		if ($this->loaded())
@@ -223,44 +227,9 @@ class Kohana_ORM_MPTT extends ORM {
 			$this->delete_space($this->left(), $this->size());
 		}
 
-		// Increment next scope
-		$scope = self::get_next_scope();
-
-		$this->{$this->scope_column} = $scope;
-		$this->{$this->level_column} = 1;
-		$this->{$this->left_column} = 1;
-		$this->{$this->right_column} = 2;
-		$this->{$this->parent_column} = NULL;
-
-		try
-		{
-			parent::save();
-		}
-		catch (Validate_Exception $e)
-		{
-			// Some fields didn't validate, throw an exception
-			throw $e;
-		}
-
-		return $this;
-	}
-
-	/**
-	 * Saves the current object as the root of a new scope.
-	 *
-	 * @access  public
-	 * @param   int       the new scope
-	 * @return  ORM_MPTT
-	 * @throws  Validation_Exception
-	 */
-	public function insert_as_new_root($scope = NULL)
-	{
-		// Cannot insert the same node twice
-		if ($this->loaded())
-			return FALSE;
-
 		if (is_null($scope))
 		{
+			// Increment next scope
 			$scope = self::get_next_scope();
 		}
 		elseif ( ! $this->scope_available($scope))
@@ -273,7 +242,7 @@ class Kohana_ORM_MPTT extends ORM {
 		$this->{$this->left_column} = 1;
 		$this->{$this->right_column} = 2;
 		$this->{$this->parent_column} = NULL;
-		
+
 		try
 		{
 			parent::save();
@@ -283,7 +252,7 @@ class Kohana_ORM_MPTT extends ORM {
 			// Some fields didn't validate, throw an exception
 			throw $e;
 		}
-		
+
 		return $this;
 	}
 
