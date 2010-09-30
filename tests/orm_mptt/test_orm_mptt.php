@@ -242,6 +242,33 @@ class ORM_MPTT_Test extends PHPUnit_Extensions_Database_TestCase {
 	}
 
 	/**
+	 * Tests inserting a node as a first child.
+	 *
+	 * @test
+	 * @covers ORM_MPTT::insert_as_first_child
+	 */
+	public function test_insert_as_first_child()
+	{
+		$node_2 = ORM::factory('test_orm_mptt', 2);
+		$node_3 = ORM::factory('test_orm_mptt', 3);
+		
+		$child_node = ORM::factory('test_orm_mptt')->insert_as_first_child($node_2);
+		
+		$node_2->reload();
+		$node_3->reload();
+		
+		$this->assertTrue($child_node->is_child($node_2));
+		$this->assertTrue($node_2->is_parent($child_node));
+
+		// Make sure the parent_id was set correctly
+		$this->assertEquals(2, $child_node->parent_id);
+		
+		// Make sure the space was adjusted correctly
+		$this->assertEquals(5, $node_2->rgt);
+		$this->assertEquals(6, $node_3->lft);
+	}
+
+	/**
 	 * Tests fetching child nodes
 	 *
 	 * @test
