@@ -269,6 +269,32 @@ class ORM_MPTT_Test extends PHPUnit_Extensions_Database_TestCase {
 	}
 
 	/**
+	 * Tests inserting a node as a last child.
+	 *
+	 * @test
+	 * @covers ORM_MPTT::insert_as_last_child
+	 */
+	public function test_insert_as_last_child()
+	{
+		$node_3 = ORM::factory('test_orm_mptt', 3);
+		$node_4 = ORM::factory('test_orm_mptt', 4);
+		
+		$child_node = ORM::factory('test_orm_mptt')->insert_as_last_child($node_3);
+		
+		$node_3->reload();
+		$node_4->reload();
+		
+		$this->assertTrue($child_node->is_child($node_3));
+
+		// Make sure the parent_id was set correctly
+		$this->assertEquals(3, $child_node->parent_id);
+		
+		// Make sure the space was adjusted correctly
+		$this->assertEquals(9, $child_node->lft);
+		$this->assertEquals(11, $node_3->rgt);
+	}
+
+	/**
 	 * Tests fetching child nodes
 	 *
 	 * @test
