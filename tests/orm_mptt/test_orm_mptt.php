@@ -295,6 +295,33 @@ class ORM_MPTT_Test extends PHPUnit_Extensions_Database_TestCase {
 	}
 
 	/**
+	 * Tests inserting a node as a previous sibling.
+	 *
+	 * @test
+	 * @covers ORM_MPTT::insert_as_prev_sibling
+	 */
+	public function test_insert_as_prev_sibling()
+	{
+		$node_3 = ORM::factory('test_orm_mptt', 3);
+		$node_4 = ORM::factory('test_orm_mptt', 4);
+		
+		$new_node = ORM::factory('test_orm_mptt')->insert_as_prev_sibling($node_4);
+		
+		$node_3->reload();
+		$node_4->reload();
+		
+		$this->assertTrue($new_node->is_child($node_3));
+
+		// Make sure the parent_id was set correctly
+		$this->assertEquals(3, $new_node->parent_id);
+		
+		// Make sure the space was adjusted correctly
+		$this->assertEquals(5, $new_node->lft);
+		$this->assertEquals(10, $node_4->rgt);
+		$this->assertEquals(11, $node_3->rgt);
+	}
+
+	/**
 	 * Tests fetching child nodes
 	 *
 	 * @test
