@@ -1,0 +1,7 @@
+<dataset>
+	<test_orm_mptt id="1" parent_id="NULL" lft="1" rgt="10" lvl="1" scope="1" />
+	<test_orm_mptt id="2" parent_id="1" lft="2" rgt="3" lvl="2" scope="1" />
+	<test_orm_mptt id="3" parent_id="1" lft="4" rgt="9" lvl="2" scope="1" />
+	<test_orm_mptt id="4" parent_id="3" lft="5" rgt="8" lvl="3" scope="1" />
+	<test_orm_mptt id="5" parent_id="4" lft="6" rgt="7" lvl="4" scope="1" />
+</dataset>
