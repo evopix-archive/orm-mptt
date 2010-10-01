@@ -526,6 +526,62 @@ class ORM_MPTT_Test extends PHPUnit_Extensions_Database_TestCase {
 	}
 
 	/**
+	 * Tests moving a node to last child above it's current position.
+	 *
+	 * @test
+	 * @covers ORM_MPTT::move_to_next_sibling
+	 */
+	public function test_move_to_next_sibling_above()
+	{
+		$node_5 = ORM::factory('test_orm_mptt', 5);
+		$node_3 = ORM::factory('test_orm_mptt', 3);
+		
+		$node_5->move_to_next_sibling($node_3);
+		
+		$node_3->reload();
+		$node_4 = ORM::factory('test_orm_mptt', 4);
+
+		// Make sure the parent_id was set correctly
+		$this->assertEquals(1, $node_5->parent_id);
+		
+		// Make sure the space was adjusted correctly
+		$this->assertEquals(8, $node_5->left());
+		$this->assertEquals(9, $node_5->right());
+		$this->assertEquals(4, $node_3->left());
+		$this->assertEquals(7, $node_3->right());
+		$this->assertEquals(5, $node_4->left());
+		$this->assertEquals(6, $node_4->right());
+	}
+
+	/**
+	 * Tests moving a node to last child below it's current position.
+	 *
+	 * @test
+	 * @covers ORM_MPTT::move_to_next_sibling
+	 */
+	public function test_move_to_next_sibling_below()
+	{
+		$node_2 = ORM::factory('test_orm_mptt', 2);
+		$node_5 = ORM::factory('test_orm_mptt', 5);
+		
+		$node_2->move_to_next_sibling($node_5);
+		
+		$node_5->reload();
+		$node_3 = ORM::factory('test_orm_mptt', 3);
+
+		// Make sure the parent_id was set correctly
+		$this->assertEquals(4, $node_2->parent_id);
+		
+		// Make sure the space was adjusted correctly
+		$this->assertEquals(6, $node_2->lft);
+		$this->assertEquals(7, $node_2->rgt);
+		$this->assertEquals(2, $node_3->lft);
+		$this->assertEquals(9, $node_3->rgt);
+		$this->assertEquals(4, $node_5->lft);
+		$this->assertEquals(5, $node_5->rgt);
+	}
+
+	/**
 	 * Tests fetching child nodes
 	 *
 	 * @test
