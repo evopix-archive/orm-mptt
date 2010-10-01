@@ -614,6 +614,18 @@ class ORM_MPTT_Test extends PHPUnit_Extensions_Database_TestCase {
 	}
 
 	/**
+	 * root() should throw an exception if an empty object and no scope is used
+	 *
+	 * @test
+	 * @expectedException Kohana_Exception
+	 * @covers ORM_MPTT::root
+	 */
+	public function test_root_exception()
+	{
+		$root = ORM::factory('test_orm_mptt')->root();
+	}
+
+	/**
 	 * Tests fetching child nodes
 	 *
 	 * @test
