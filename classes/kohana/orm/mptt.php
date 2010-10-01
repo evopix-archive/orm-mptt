@@ -495,17 +495,26 @@ class Kohana_ORM_MPTT extends ORM {
 				return FALSE;
 			}
 
-			$left_offset = ($left_column === TRUE ? $target->left() : $target->right()) + $left_offset;
+			if ($level_offset > 0)
+			{
+				// We're moving to a child node so add 1 to left offset.
+				$left_offset = ($left_column === TRUE) ? ($target->left() + 1) : ($target->right() + $left_offset);
+			}
+			else
+			{
+				$left_offset = ($left_column === TRUE) ? $target->left() : ($target->right() + $left_offset);
+			}
+			
 			$level_offset = $target->level() - $this->level() + $level_offset;
 			$size = $this->size();
-			
+
 			$this->create_space($left_offset, $size);
 
 			$this->reload();
 
 			$offset = ($left_offset - $this->left());
 			
-			$this->_db->query(NULL, 'UPDATE '.$this->_table_name.' SET `'
+			$this->_db->query(Database::UPDATE, 'UPDATE '.$this->_table_name.' SET `'
 				. $this->left_column.'` = `'.$this->left_column.'` + '
 				. $offset.', `'.$this->right_column.'` =  `'.$this->right_column.'` + '
 				. $offset.', `'.$this->level_column.'` =  `'.$this->level_column.'` + '
@@ -513,7 +522,7 @@ class Kohana_ORM_MPTT extends ORM {
 				. ' WHERE `'.$this->left_column.'` >= '.$this->left().' AND `'
 				. $this->right_column.'` <= '.$this->right().' AND `'
 				. $this->scope_column.'` = '.$this->scope(), TRUE);
-
+			
 			$this->delete_space($this->left(), $size);
 		}
 		catch (Kohana_Exception $e)
@@ -531,6 +540,8 @@ class Kohana_ORM_MPTT extends ORM {
 		}
 
 		$this->unlock();
+		$this->reload();
+
 		return $this;
 	}
 
