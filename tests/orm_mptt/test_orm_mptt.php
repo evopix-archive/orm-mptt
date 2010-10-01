@@ -582,6 +582,38 @@ class ORM_MPTT_Test extends PHPUnit_Extensions_Database_TestCase {
 	}
 
 	/**
+	 * Provides test data for test_root()
+	 *
+	 * @return array
+	 */
+	public function provider_root()
+	{
+		// $node_id, $scope, $root_id
+		return array(
+			array(NULL, 1, 1),
+			array(5, NULL, 1),
+		);
+	}
+
+	/**
+	 * Tests retrieval of a root node.
+	 *
+	 * @test
+	 * @dataProvider provider_root
+	 * @param int $node_id ID of the node to retrieve the root on.
+	 * @param int $scope Scope of root to retrieve.
+	 * @param int $root_id Expected root id.
+	 * @covers ORM_MPTT::root
+	 */
+	public function test_root($node_id, $scope, $root_id)
+	{
+		$root = ORM::factory('test_orm_mptt', $node_id)->root($scope);
+
+		// Make sure the parent_id was set correctly
+		$this->assertEquals($root_id, $root->pk());
+	}
+
+	/**
 	 * Tests fetching child nodes
 	 *
 	 * @test
