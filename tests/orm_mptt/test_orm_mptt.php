@@ -382,11 +382,11 @@ class ORM_MPTT_Test extends PHPUnit_Extensions_Database_TestCase {
 		$this->assertEquals(3, $node_2->parent_id);
 		
 		// Make sure the space was adjusted correctly
-		$this->assertEquals(5, $node_2->left());
-		$this->assertEquals(6, $node_2->right());
-		$this->assertEquals(11, $node_3->right());
-		$this->assertEquals(7, $node_4->left());
-		$this->assertEquals(10, $node_4->right());
+		$this->assertEquals(3, $node_2->left());
+		$this->assertEquals(4, $node_2->right());
+		$this->assertEquals(9, $node_3->right());
+		$this->assertEquals(5, $node_4->left());
+		$this->assertEquals(8, $node_4->right());
 	}
 
 	/**
