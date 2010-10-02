@@ -565,7 +565,7 @@ class Kohana_ORM_MPTT extends ORM {
 	}
 
 	/**
-	 * Returns current or all root node/s
+	 * Returns the root node of the current object instance.
 	 * 
 	 * @access  public
 	 * @param   int             scope
@@ -579,7 +579,7 @@ class Kohana_ORM_MPTT extends ORM {
 		}
 		elseif (is_null($scope) AND ! $this->loaded())
 		{
-			return FALSE;
+			throw new Kohana_Exception(':method must be called on an ORM_MPTT object instance.', array(':method' => 'root'));
 		}
 		
 		return self::factory($this->object_name(), array($this->left_column => 1, $this->scope_column => $scope));
