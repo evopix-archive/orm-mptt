@@ -704,7 +704,7 @@ class Kohana_ORM_MPTT extends ORM {
 		 
 		if ( ! $self)
 		{
-			$query->where($this->primary_key, '<>', $this->pk());
+			$query->where($this->primary_key(), '<>', $this->pk());
 		}
 		 
 		return $query->find_all();
