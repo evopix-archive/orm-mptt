@@ -193,7 +193,7 @@ class Kohana_ORM_MPTT extends ORM {
 	 * @access  public
 	 * @return  mixed
 	 */
-	public function save()
+	public function save(Validation $validation = NULL)
 	{
 		if ( ! $this->loaded())
 		{
