@@ -259,7 +259,7 @@ class Kohana_ORM_MPTT extends ORM {
 		{
 			parent::save($validation);
 		}
-		catch (Validate_Exception $e)
+		catch (ORM_Validation_Exception $e)
 		{
 			// Some fields didn't validate, throw an exception
 			throw $e;
@@ -397,7 +397,7 @@ class Kohana_ORM_MPTT extends ORM {
 		{
 			parent::save();
 		}
-		catch (Validate_Exception $e)
+		catch (ORM_Validation_Exception $e)
 		{
 			// We had a problem saving, make sure we clean up the tree
 			$this->delete_space($this->left());
