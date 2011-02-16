@@ -227,7 +227,7 @@ class Kohana_ORM_MPTT extends ORM {
 	 * @return  ORM_MPTT
 	 * @throws  Validation_Exception
 	 */
-	public function make_root($scope = NULL)
+	public function make_root(Validation $validation = NULL, $scope = NULL)
 	{
 		// If node already exists, and already root, exit
 		if ($this->loaded() AND $this->is_root())
@@ -257,7 +257,7 @@ class Kohana_ORM_MPTT extends ORM {
 
 		try
 		{
-			parent::save();
+			parent::save($validation);
 		}
 		catch (Validate_Exception $e)
 		{
