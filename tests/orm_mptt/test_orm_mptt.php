@@ -626,6 +626,22 @@ class ORM_MPTT_Test extends PHPUnit_Extensions_Database_TestCase {
 	}
 
 	/**
+	 * Tests retrieval of all root nodes.
+	 *
+	 * @test
+	 * @covers ORM_MPTT::roots
+	 */
+	public function test_roots()
+	{
+		$roots = ORM::factory('test_orm_mptt')->roots;
+		$roots = $roots->as_array();
+		
+		$this->assertEquals(1, sizeof($roots));
+		$this->assertEquals(1, $roots[0]->left());
+		$this->assertEquals(10, $roots[0]->right());
+	}
+
+	/**
 	 * Tests fetching child nodes
 	 *
 	 * @test
