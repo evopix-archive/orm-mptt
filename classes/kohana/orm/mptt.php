@@ -188,6 +188,18 @@ class Kohana_ORM_MPTT extends ORM {
 	}
 
 	/**
+	 * Overloaded create() method to call make_root().
+	 * 
+	 * @access  public
+	 * @param   Validation  $validation  Extra validation to run
+	 * @return  mixed
+	 */
+	public function create(Validation $validation = NULL)
+	{
+		return $this->make_root($validation);
+	}
+
+	/**
 	 * Overloaded save method.
 	 * 
 	 * @access  public
