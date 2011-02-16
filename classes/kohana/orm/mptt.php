@@ -209,13 +209,13 @@ class Kohana_ORM_MPTT extends ORM {
 	{
 		if ( ! $this->loaded())
 		{
-			return $this->make_root();
+			return $this->make_root($validation);
 		}
 		elseif ($this->loaded() === TRUE)
 		{
-			return parent::save();
+			return parent::save($validation);
 		}
-		
+
 		return FALSE;
 	}
 
