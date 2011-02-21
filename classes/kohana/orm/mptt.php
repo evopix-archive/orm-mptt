@@ -526,7 +526,7 @@ class Kohana_ORM_MPTT extends ORM {
 
 			$offset = ($left_offset - $this->left());
 			
-			$this->_db->query(Database::UPDATE, 'UPDATE '.$this->_table_name.' SET `'
+			$this->_db->query(Database::UPDATE, 'UPDATE '.$this->_db->quote_table($this->_table_name).' SET `'
 				. $this->left_column.'` = `'.$this->left_column.'` + '
 				. $offset.', `'.$this->right_column.'` =  `'.$this->right_column.'` + '
 				. $offset.', `'.$this->level_column.'` =  `'.$this->level_column.'` + '
@@ -840,7 +840,7 @@ class Kohana_ORM_MPTT extends ORM {
 	 */
 	protected function lock()
 	{
-		$this->_db->query(NULL, 'LOCK TABLE '.$this->_table_name.' WRITE', TRUE);
+		$this->_db->query(NULL, 'LOCK TABLE '.$this->_db->quote_table($this->_table_name).' WRITE', TRUE);
 	}
 
 	/**
