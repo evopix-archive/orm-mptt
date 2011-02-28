@@ -310,7 +310,7 @@ class Kohana_ORM_MPTT extends ORM {
 	 */
 	public function insert_as_last_child($target)
 	{
-		$target = $this->parent_from($target, 'id');
+		$target = $this->parent_from($target, $this->primary_key());
 		return $this->insert($target, $this->right_column, 0, 1);
 	}
 	
@@ -434,13 +434,13 @@ class Kohana_ORM_MPTT extends ORM {
 	
 	public function move_to_first_child($target)
 	{
-		$target = $this->parent_from($target, 'id');
+		$target = $this->parent_from($target, $this->primary_key());
 		return $this->move($target, TRUE, 1, 1, TRUE);
 	}
 	
 	public function move_to_last_child($target)
 	{
-		$target = $this->parent_from($target, 'id');
+		$target = $this->parent_from($target, $this->primary_key());
 		return $this->move($target, FALSE, 0, 1, TRUE);
 	}
 	
