@@ -936,7 +936,7 @@ class Kohana_ORM_MPTT extends ORM {
 	public function rebuild_tree($left = 1, $target = NULL)
 	{
 		// check if using target or self as root and load if not loaded
-		if (is_null($target) AND $this->empty_pk())
+		if (is_null($target) AND ! $this->loaded())
 		{
 			return FALSE;
 		}
