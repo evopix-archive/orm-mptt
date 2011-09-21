@@ -4,17 +4,6 @@
 
 Place module in /modules/ and include the call in your bootstrap.
 
-## Config
-
-	return array
-	(
-		'left_column' => 'lft',
-		'right_column' => 'rgt',
-		'level_column' => 'lvl',
-		'scope_column' => 'scope',
-		'parent_column' => 'parent_id'
-	);
-
 
 ## Declaring your ORM object
 
