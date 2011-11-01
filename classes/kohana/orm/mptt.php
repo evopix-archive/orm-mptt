@@ -243,17 +243,7 @@ class Kohana_ORM_MPTT extends ORM {
 		$this->{$this->right_column} = 2;
 		$this->{$this->parent_column} = NULL;
 
-		try
-		{
-			parent::save($validation);
-		}
-		catch (ORM_Validation_Exception $e)
-		{
-			// Some fields didn't validate, throw an exception
-			throw $e;
-		}
-
-		return $this;
+		return parent::save($validation);
 	}
 
 	/**
