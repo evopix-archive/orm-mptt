@@ -1,4 +1,4 @@
-# This is the stable branch for Kohana 3.1 and is no longer maintained!!!
+# This is the stable branch for Kohana 3.0 and is no longer maintained!!!
 
 # MPTT Library, extends ORM
 
