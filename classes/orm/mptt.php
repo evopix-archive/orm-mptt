@@ -1,3 +1,3 @@
-<?php defined('SYSPATH') OR die('No direct access allowed.');
+<?php defined('SYSPATH') or die('No direct script access.');
 
-class ORM_MPTT extends Kohana_ORM_MPTT {}
+class ORM_MPTT extends ORM_MPTT_Core {}
