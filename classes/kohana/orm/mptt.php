@@ -230,7 +230,7 @@ class Kohana_ORM_MPTT extends ORM {
 		if (is_null($scope))
 		{
 			// Increment next scope
-			$scope = self::get_next_scope();
+            $scope = ORM_MPTT::get_next_scope();
 		}
 		elseif ( ! $this->scope_available($scope))
 		{
