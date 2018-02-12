@@ -1,4 +1,4 @@
-# This is the stable branch for Kohana 3.1 and is no longer maintained!!!
+# This library is old and no longer maintained, for a modern alternative use [Doctrine Extensions](https://github.com/Atlantic18/DoctrineExtensions).
 
 # MPTT Library, extends ORM
 
